@@ -4,6 +4,8 @@ import { RichText, Date } from 'prismic-reactjs'
 import { client, linkResolver, hrefResolver } from '../prismic-configuration'
 import Link from 'next/link'
 import PostListItem from '../components/PostListItem'
+import GatedContentPost from '../components/GatedContentPost'
+
 
 
 
@@ -32,25 +34,23 @@ const BlogHome = ({ home, posts, featuredPosts, counter }) => (
 	<ul>
 	
       {posts.results.map((post, index) => 
-
+				// after every three posts insert gated content
 				(index + 1) % 3 ?
 				<PostListItem
 					key={post.uid}
 					post={post}
 					title={post.data.title}
 					date={post.data.date}
-					counter={index+1}
 				/>
 				:
 				<>
 					<PostListItem
-					key={post.uid}
-					post={post}
-					title={post.data.title}
-					date={post.data.date}
-					counter={index+1}
-				/>
-				<h2>Insert gated content</h2>
+						key={post.uid}
+						post={post}
+						title={post.data.title}
+						date={post.data.date}
+					/>
+					<GatedContentPost key={index} />
 				</>
 				
 			
@@ -62,7 +62,6 @@ const BlogHome = ({ home, posts, featuredPosts, counter }) => (
 )
 
 export async function getServerSideProps({res}) {
-let counter = 1;
   const home = await client.getSingle('blog_home')
   const featuredPosts = await client.query([
 	Prismic.Predicates.at('document.type', 'post'),
@@ -82,7 +81,7 @@ let counter = 1;
 
   res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate')
 
-  return { props: { home, featuredPosts, posts, counter } }
+  return { props: { home, featuredPosts, posts } }
 }
 
 export default BlogHome
