@@ -14,6 +14,7 @@ const GatedContentPost = ({ gatedContent, title, date }) => {
     // </div>
 
 	<li>
+		<h2>Gated content!</h2>
 		<Link href={hrefResolver(gatedContent)} as={linkResolver(gatedContent)} passHref>
 			<a><strong>{RichText.asText(title)}</strong></a>
 		</Link>
