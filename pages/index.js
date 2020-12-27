@@ -3,7 +3,7 @@ import Prismic from 'prismic-javascript';
 import { RichText, Date } from 'prismic-reactjs';
 import { client, linkResolver, hrefResolver } from '../prismic-configuration';
 import Link from 'next/link';
-// import Image from 'next/image';
+import Image from 'next/image';
 import PostListItem from '../components/PostListItem';
 import GatedContentPost from '../components/GatedContentPost';
 
@@ -15,8 +15,16 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
 		<pre>{JSON.stringify({home})}</pre>
 		<pre>{JSON.stringify({posts})}</pre> 
 		<pre>{JSON.stringify({gatedContentPosts})}</pre> */}
-        <img src={home.data.image.url} alt="avatar image" />
-        {/* <Image src={home.data.image.url} alt="foo" /> */}
+        {/* <img src={home.data.image.url} alt="avatar image" /> */}
+
+        <Image src={home.data.image.url} alt="foo" width={600} height={460} />
+
+        {/* NextJS Image component documentation:
+		https://nextjs.org/docs/basic-features/image-optimization 
+		
+		Prismic/Imgix docs https://user-guides.prismic.io/en/articles/3309829-image-optimization-imgix-integration
+		
+		*/}
         <h1>{RichText.asText(home.data.headline)}</h1>
         <p>{home.data.test_field}</p>
         <p>{RichText.asText(home.data.description)}</p>
