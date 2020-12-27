@@ -10,5 +10,11 @@
     "name": "Post",
     "repeatable": true,
     "value": "post.json"
+  },
+  {
+    "id": "gated_content",
+    "name": "Gated Content",
+    "repeatable": true,
+    "value": "gated_content.json"
   }
 ]
