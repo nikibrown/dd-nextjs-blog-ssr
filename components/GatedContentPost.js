@@ -1,10 +1,10 @@
 import React from 'react'
-// import { RichText, Date } from 'prismic-reactjs'
-// import { linkResolver, hrefResolver } from '../prismic-configuration'
-// import Link from 'next/link'
+import { RichText, Date } from 'prismic-reactjs'
+import { linkResolver, hrefResolver } from '../prismic-configuration'
+import Link from 'next/link'
 
 
-const GatedContentPost = () => {
+const GatedContentPost = ({ gatedContent, title, date }) => {
   return (
     // <div className="home">
     //   <div className="blog-avatar"  style={{ backgroundImage: `url(${image.url})` }} />
@@ -13,9 +13,12 @@ const GatedContentPost = () => {
     //   <style jsx global>{headerStyles}</style>
     // </div>
 
-		<li>
-			<strong>Gated Content Post</strong>
-		</li>
+	<li>
+		<Link href={hrefResolver(gatedContent)} as={linkResolver(gatedContent)} passHref>
+			<a><strong>{RichText.asText(title)}</strong></a>
+		</Link>
+		<span>{Date(date).toString()}</span>
+	</li>
   )
 }
 

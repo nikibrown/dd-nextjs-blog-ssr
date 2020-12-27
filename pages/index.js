@@ -9,10 +9,14 @@ import GatedContentPost from '../components/GatedContentPost'
 
 
 
-const BlogHome = ({ home, posts, featuredPosts, counter }) => (
+const BlogHome = ({ home, posts, featuredPosts, gatedContent }) => (
   <div>
 	  {/* <pre>{JSON.stringify({home})}</pre>
 	  <pre>{JSON.stringify({posts})}</pre> */}
+
+	  <pre>{JSON.stringify({gatedContent})}</pre>
+
+
     <img src={home.data.image.url} alt="avatar image" />
     <h1>{RichText.asText(home.data.headline)}</h1>
 	<p>{home.data.test_field}</p>
@@ -50,7 +54,19 @@ const BlogHome = ({ home, posts, featuredPosts, counter }) => (
 						title={post.data.title}
 						date={post.data.date}
 					/>
-					<GatedContentPost key={index} />
+
+					{/* {gatedContent.results.map((gatedContentPost, index) => {
+						// return (
+						// 	<option key={headers}>{headers}</option>
+						// )
+						<GatedContentPost 
+							key={gatedContentPost.uid}
+							gatedContentPost={gatedContentPost}
+							title={gatedContentPost.data.title}
+							date={gatedContentPost.data.date}
+						/>
+					})} */}
+					
 				</>
 				
 			
@@ -75,9 +91,14 @@ export async function getServerSideProps({res}) {
     { orderings: '[my.post.date desc]' }
   )
 
-  // use fullText for search https://prismic.io/docs/technologies/query-predicate-reference-javascript#fulltext
+  const gatedContent = await client.query(
+	Prismic.Predicates.at('document.type', 'gated_content')
+  )
+	// TODO: nav example https://prismic.io/docs/technologies/navbars-footers-and-menus-nextjs
 
-  // insert gated_content something every three posts
+  	// TODO: fullText for search https://prismic.io/docs/technologies/query-predicate-reference-javascript#fulltext
+
+  	// ✔ insert gated_content something every three posts
 
   res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate')
 
