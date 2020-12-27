@@ -25,6 +25,7 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
 		Prismic/Imgix docs https://user-guides.prismic.io/en/articles/3309829-image-optimization-imgix-integration
 		
 		*/}
+
         <h1>{RichText.asText(home.data.headline)}</h1>
         <p>{home.data.test_field}</p>
         <p>{RichText.asText(home.data.description)}</p>
@@ -43,8 +44,8 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
         </ul>
         <h2>Featured Posts</h2>
         <ul>
-            {featuredPosts.results.map((featuredPost) => (
-                <li key={featuredPost.uid}>
+            {featuredPosts.results.map((featuredPost, index) => (
+                <li key={index}>
                     <Link
                         href={hrefResolver(featuredPost)}
                         as={linkResolver(featuredPost)}
