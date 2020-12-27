@@ -3,6 +3,7 @@ import Prismic from 'prismic-javascript';
 import { RichText, Date } from 'prismic-reactjs';
 import { client, linkResolver, hrefResolver } from '../prismic-configuration';
 import Link from 'next/link';
+// import Image from 'next/image';
 import PostListItem from '../components/PostListItem';
 import GatedContentPost from '../components/GatedContentPost';
 
@@ -14,19 +15,16 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
 		<pre>{JSON.stringify({home})}</pre>
 		<pre>{JSON.stringify({posts})}</pre> 
 		<pre>{JSON.stringify({gatedContentPosts})}</pre> */}
-
         <img src={home.data.image.url} alt="avatar image" />
+        {/* <Image src={home.data.image.url} alt="foo" /> */}
         <h1>{RichText.asText(home.data.headline)}</h1>
         <p>{home.data.test_field}</p>
         <p>{RichText.asText(home.data.description)}</p>
-
         <h2>Gated Content! Y U Not mapping through data?</h2>
-
         <p>
             I can access data from the API like so: gatedContentPosts.results[2].data.test :{' '}
             {gatedContentPosts.results[2].data.test}
         </p>
-
         <p>But for some reason I can't map through gatedContentPosts (UL below)</p>
         <ul>
             {gatedContentPosts.results.map((gatedContentPost) => {
@@ -35,7 +33,6 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
                 </li>;
             })}
         </ul>
-
         <h2>Featured Posts</h2>
         <ul>
             {featuredPosts.results.map((featuredPost) => (
@@ -50,7 +47,6 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
                 </li>
             ))}
         </ul>
-
         <h2>Blog Posts</h2>
         <ul>
             {posts.results.map((post, index) =>
