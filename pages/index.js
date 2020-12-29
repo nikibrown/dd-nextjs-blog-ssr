@@ -1,11 +1,11 @@
-import React from 'react';
-import Prismic from 'prismic-javascript';
-import { RichText, Date } from 'prismic-reactjs';
-import { client, linkResolver, hrefResolver } from '../prismic-configuration';
-import Link from 'next/link';
-import Image from 'next/image';
-import PostListItem from '../components/PostListItem';
-import GatedContentPost from '../components/GatedContentPost';
+import React from 'react'
+import Prismic from 'prismic-javascript'
+import { RichText, Date } from 'prismic-reactjs'
+import { client, linkResolver, hrefResolver } from '../prismic-configuration'
+import { default as NextLink } from 'next/link'
+import Image from 'next/image'
+import PostListItem from '../components/PostListItem'
+// import GatedContentPost from '../components/GatedContentPost'
 
 const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
     <div>
@@ -14,8 +14,8 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
 		https://dev.to/ruben_suet/set-up-nextjs-9-4-with-prismic-as-headless-cms-27ij
 		<pre>{JSON.stringify({home})}</pre>
 		<pre>{JSON.stringify({posts})}</pre> 
-		<pre>{JSON.stringify({gatedContentPosts})}</pre> */}
-        {/* <img src={home.data.image.url} alt="avatar image" /> */}
+        <pre>{JSON.stringify({ gatedContentPosts })}</pre>
+        <img src={home.data.image.url} alt="avatar image" /> */}
 
         <Image src={home.data.image.url} alt="foo" width={600} height={460} />
 
@@ -29,29 +29,17 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
         <h1>{RichText.asText(home.data.headline)}</h1>
         <p>{home.data.test_field}</p>
         <p>{RichText.asText(home.data.description)}</p>
-        <h2>Gated Content! Y U Not mapping through data?</h2>
-        <p>
-            I can access data from the API like so: gatedContentPosts.results[2].data.test :{' '}
-            {gatedContentPosts.results[2].data.test}
-        </p>
-        <p>But for some reason I can't map through gatedContentPosts (UL below)</p>
-        <ul>
-            {gatedContentPosts.results.map((gatedContentPost) => {
-                <li key={gatedContentPost.uid}>
-                    <p>{RichText.render(gatedContentPost.data.title)}</p>
-                </li>;
-            })}
-        </ul>
+
         <h2>Featured Posts</h2>
         <ul>
             {featuredPosts.results.map((featuredPost, index) => (
-                <li key={index}>
-                    <Link
+                <li key={featuredPost.uid}>
+                    <NextLink
                         href={hrefResolver(featuredPost)}
                         as={linkResolver(featuredPost)}
                         passHref>
                         <a>{RichText.render(featuredPost.data.title)}</a>
-                    </Link>
+                    </NextLink>
                     <span>{Date(featuredPost.data.date).toString()}</span>
                 </li>
             ))}
@@ -77,6 +65,17 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
                         />
                         <p>Gated content will go here!</p>
 
+                        {gatedContentPosts.results.map((gatedContentPost, index) => (
+                            <li key={gatedContentPost.id}>
+                                <NextLink
+                                    href={hrefResolver(gatedContentPost)}
+                                    as={linkResolver(gatedContentPost)}
+                                    passHref>
+                                    <a>{RichText.render(gatedContentPost.data.title)}</a>
+                                </NextLink>
+                            </li>
+                        ))}
+
                         {/* {gatedContent.results.map((gatedContentPost, index) => {
 					{index}
 					<GatedContentPost 
@@ -91,10 +90,10 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
             )}
         </ul>
     </div>
-);
+)
 
 export async function getServerSideProps({ res }) {
-    const home = await client.getSingle('blog_home');
+    const home = await client.getSingle('blog_home')
 
     const featuredPosts = await client.query(
         [
@@ -102,7 +101,7 @@ export async function getServerSideProps({ res }) {
             Prismic.Predicates.at('document.tags', ['Featured'])
         ],
         { orderings: '[my.post.date desc]' }
-    );
+    )
 
     const posts = await client.query(
         [
@@ -110,12 +109,11 @@ export async function getServerSideProps({ res }) {
             Prismic.Predicates.not('document.tags', ['Featured'])
         ],
         { orderings: '[my.post.date desc]' }
-    );
+    )
 
     const gatedContentPosts = await client.query(
-        [Prismic.Predicates.at('document.type', 'gated_content')],
-        { orderings: '[my.post.date desc]' }
-    );
+        Prismic.Predicates.at('document.type', 'gated_content')
+    )
 
     // TODO: nav example https://prismic.io/docs/technologies/navbars-footers-and-menus-nextjs
 
@@ -123,9 +121,9 @@ export async function getServerSideProps({ res }) {
 
     // ✔ insert gated_content something every three posts
 
-    res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate');
+    res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate')
 
-    return { props: { home, featuredPosts, posts, gatedContentPosts } };
+    return { props: { home, featuredPosts, posts, gatedContentPosts } }
 }
 
-export default BlogHome;
+export default BlogHome
