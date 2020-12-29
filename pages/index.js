@@ -17,6 +17,8 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
         <pre>{JSON.stringify({ gatedContentPosts })}</pre>
         <img src={home.data.image.url} alt="avatar image" /> */}
 
+        <pre>{JSON.stringify({ home })}</pre>
+
         <Image src={home.data.image.url} alt="foo" width={600} height={460} />
 
         {/* NextJS Image component documentation:
@@ -65,16 +67,30 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
                         />
                         <p>Gated content will go here!</p>
 
-                        {gatedContentPosts.results.map((gatedContentPost, index) => (
-                            <li key={gatedContentPost.id}>
-                                <NextLink
-                                    href={hrefResolver(gatedContentPost)}
-                                    as={linkResolver(gatedContentPost)}
-                                    passHref>
-                                    <a>{RichText.render(gatedContentPost.data.title)}</a>
-                                </NextLink>
-                            </li>
-                        ))}
+                        {/* TODO: fetch links to grab this content */}
+
+                        {/* TODO: turn this into a component */}
+
+                        {index + 1 === 3 ? (
+                            <h3>
+                                Gated Content Post 1
+                                {home.data.promoted_gated_content[0].gated_content.slug}
+                            </h3>
+                        ) : null}
+
+                        {index + 1 === 6 ? (
+                            <h3>
+                                Gated Content Post 2
+                                {home.data.promoted_gated_content[1].gated_content.slug}
+                            </h3>
+                        ) : null}
+
+                        {index + 1 === 9 ? (
+                            <h3>
+                                Gated Content Post 3
+                                {home.data.promoted_gated_content[2].gated_content.slug}
+                            </h3>
+                        ) : null}
 
                         {/* {gatedContent.results.map((gatedContentPost, index) => {
 					{index}
