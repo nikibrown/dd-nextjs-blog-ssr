@@ -9,73 +9,87 @@ import PostListItem from '../components/PostListItem'
 
 const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
     <main>
-        {/* Tutorials: 
+        <div className="container">
+            {/* Tutorials: 
 		https://vercel.com/guides/deploying-next-and-prismic-with-vercel 
 		https://dev.to/ruben_suet/set-up-nextjs-9-4-with-prismic-as-headless-cms-27ij
 		<pre>{JSON.stringify({home})}</pre>
 		// <pre>{JSON.stringify({posts})}</pre> 
         <pre>{JSON.stringify({ gatedContentPosts })}</pre>
         <img src={home.data.image.url} alt="avatar image" /> */}
-        {/* <pre>{JSON.stringify({ home })}</pre> */}
-        <Image
-            src={home.data.image.url}
-            alt={home.data.image.alt}
-            width={home.data.image.dimensions.width}
-            height={home.data.image.dimensions.height}
-            className="featured-image"
-        />
-        {/* NextJS Image component documentation:
+            {/* <pre>{JSON.stringify({ home })}</pre> */}
+            <Image
+                src={home.data.image.url}
+                alt={home.data.image.alt}
+                width={home.data.image.dimensions.width}
+                height={home.data.image.dimensions.height}
+                className="blog-image"
+            />
+            {/* NextJS Image component documentation:
 		https://nextjs.org/docs/basic-features/image-optimization 
 		
 		Prismic/Imgix docs https://user-guides.prismic.io/en/articles/3309829-image-optimization-imgix-integration
 		
 		*/}
 
-        {/* <pre>{JSON.stringify({ home })}</pre> */}
+            {/* <pre>{JSON.stringify({ home })}</pre> */}
 
-        <h1>{RichText.asText(home.data.headline)}</h1>
-        <p>{home.data.test_field}</p>
-        <p>{RichText.asText(home.data.description)}</p>
-        <h2>Featured Posts</h2>
-        <ul>
-            {featuredPosts.results.map((featuredPost, index) => (
-                <li key={featuredPost.uid}>
-                    <NextLink
-                        href={hrefResolver(featuredPost)}
-                        as={linkResolver(featuredPost)}
-                        passHref>
-                        <a>{RichText.render(featuredPost.data.title)}</a>
-                    </NextLink>
-                    <span>{Date(featuredPost.data.date).toString()}</span>
-                </li>
-            ))}
-        </ul>
-        <h2>Blog Posts</h2>
+            <h1>{RichText.asText(home.data.headline)}</h1>
+            <p>{home.data.test_field}</p>
+            <p>{RichText.asText(home.data.description)}</p>
+            <h2>Featured Posts</h2>
+            <div className="row">
+                {featuredPosts.results.map((featuredPost, index) => (
+                    <div className="col-lg-4" key={featuredPost.uid}>
+                        <NextLink
+                            href={hrefResolver(featuredPost)}
+                            as={linkResolver(featuredPost)}
+                            passHref>
+                            <a className="card">
+                                <img
+                                    className="card-img-top"
+                                    src="http://placekitten.com/300/200"
+                                    alt="Card image cap"
+                                />
+                                <div className="card-body">
+                                    <h5 className="card-title">
+                                        {RichText.render(featuredPost.data.title)}
+                                    </h5>
+                                    <h6 classNAme="card-subtitle mb-2 text-muted">
+                                        {Date(featuredPost.data.date).toString()}
+                                    </h6>
+                                </div>
+                            </a>
+                        </NextLink>
+                    </div>
+                ))}
+            </div>
+            <h2>Blog Posts</h2>
 
-        <ol>
-            {allBlogContent.map((post) => (
-                <li key={post.uid}>
-                    <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
-                        <a>
-                            <Image
-                                src={post.featuredImage.url}
-                                alt={post.featuredImage.alt}
-                                className="featured-image"
-                                width={post.featuredImage.dimensions.width}
-                                height={post.featuredImage.dimensions.height}
-                            />
-                        </a>
-                    </NextLink>
-                    <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
-                        <a>{RichText.render(post.title)}</a>
-                    </NextLink>
-                </li>
-            ))}
-        </ol>
+            <ol>
+                {allBlogContent.map((post) => (
+                    <li key={post.uid}>
+                        <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
+                            <a>
+                                <Image
+                                    src={post.featuredImage.url}
+                                    alt={post.featuredImage.alt}
+                                    className="featured-image"
+                                    width={post.featuredImage.dimensions.width}
+                                    height={post.featuredImage.dimensions.height}
+                                />
+                            </a>
+                        </NextLink>
+                        <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
+                            <a>{RichText.render(post.title)}</a>
+                        </NextLink>
+                    </li>
+                ))}
+            </ol>
 
-        {/* TODO: delete this shit and use amys shit https://codepen.io/nikibrown/pen/LYRQPgX https://codesandbox.io/s/youthful-voice-4p2i8?file=/src/Posts.js:1629-1647 */}
+            {/* TODO: delete this shit and use amys shit https://codepen.io/nikibrown/pen/LYRQPgX https://codesandbox.io/s/youthful-voice-4p2i8?file=/src/Posts.js:1629-1647 */}
 
-        {/* <ol>
+            {/* <ol>
             {posts.results.map((post, index) =>
                 // after every three posts insert gated content
                 (index + 1) % 3 ? (
@@ -122,26 +136,34 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
             )}
         </ol> */}
 
-        <link
-            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
-            rel="stylesheet"
-        />
+            <link
+                rel="stylesheet"
+                href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+                crossOrigin="anonymous"></link>
 
-        <style global jsx>{`
-            body {
-                color: #353535;
-                font-family: 'Lato', sans-serif;
-            }
+            <link
+                href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
+                rel="stylesheet"
+            />
 
-            main {
-                margin: 50px auto;
-                width: 50vw;
-            }
-            .featured-image {
-                height: auto;
-                max-width: 300px;
-            }
-        `}</style>
+            <style global jsx>{`
+                body {
+                    color: #353535;
+                    font-family: 'Lato', sans-serif;
+                }
+
+                .featured-image {
+                    height: auto;
+                    max-width: 300px;
+                }
+
+                .blog-image {
+                    display: block;
+                    margin: 20px auto;
+                }
+            `}</style>
+        </div>
     </main>
 )
 
