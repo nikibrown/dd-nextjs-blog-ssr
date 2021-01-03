@@ -4,12 +4,12 @@ import { RichText, Date } from 'prismic-reactjs'
 import { client, relatedLinkResolver, relatedHrefResolver } from '../prismic-configuration'
 
 const Post = ({ post }) => (
-    <div>
+    <main>
         <NextLink href="/">
             <a>Back to blog list</a>
         </NextLink>
 
-        <pre>{JSON.stringify({ post })}</pre>
+        {/* <p>{JSON.stringify({ post })}</p> */}
 
         {RichText.render(post.data.title)}
         <p>{Date(post.data.date).toString()}</p>
@@ -54,7 +54,28 @@ const Post = ({ post }) => (
                 </li>
             ))}
         </ul>
-    </div>
+
+        <link
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
+            rel="stylesheet"
+        />
+
+        <style global jsx>{`
+            body {
+                color: #353535;
+                font-family: 'Lato', sans-serif;
+            }
+
+            main {
+                margin: 50px auto;
+                width: 50vw;
+            }
+            .featured-image {
+                height: auto;
+                max-width: 300px;
+            }
+        `}</style>
+    </main>
 )
 
 export async function getServerSideProps({ query, res }) {

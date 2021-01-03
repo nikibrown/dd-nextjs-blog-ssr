@@ -8,7 +8,7 @@ import PostListItem from '../components/PostListItem'
 // import GatedContentPost from '../components/GatedContentPost'
 
 const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
-    <div>
+    <main>
         {/* Tutorials: 
 		https://vercel.com/guides/deploying-next-and-prismic-with-vercel 
 		https://dev.to/ruben_suet/set-up-nextjs-9-4-with-prismic-as-headless-cms-27ij
@@ -17,7 +17,13 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
         <pre>{JSON.stringify({ gatedContentPosts })}</pre>
         <img src={home.data.image.url} alt="avatar image" /> */}
         {/* <pre>{JSON.stringify({ home })}</pre> */}
-        <Image src={home.data.image.url} alt="foo" width={600} height={460} />
+        <Image
+            src={home.data.image.url}
+            alt={home.data.image.alt}
+            width={home.data.image.dimensions.width}
+            height={home.data.image.dimensions.height}
+            className="featured-image"
+        />
         {/* NextJS Image component documentation:
 		https://nextjs.org/docs/basic-features/image-optimization 
 		
@@ -25,7 +31,7 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
 		
 		*/}
 
-        <pre>{JSON.stringify({ home })}</pre>
+        {/* <pre>{JSON.stringify({ home })}</pre> */}
 
         <h1>{RichText.asText(home.data.headline)}</h1>
         <p>{home.data.test_field}</p>
@@ -49,6 +55,17 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
         <ol>
             {allBlogContent.map((post) => (
                 <li key={post.uid}>
+                    <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
+                        <a>
+                            <Image
+                                src={post.featuredImage.url}
+                                alt={post.featuredImage.alt}
+                                className="featured-image"
+                                width={post.featuredImage.dimensions.width}
+                                height={post.featuredImage.dimensions.height}
+                            />
+                        </a>
+                    </NextLink>
                     <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
                         <a>{RichText.render(post.title)}</a>
                     </NextLink>
@@ -104,12 +121,33 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
                 )
             )}
         </ol> */}
-    </div>
+
+        <link
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
+            rel="stylesheet"
+        />
+
+        <style global jsx>{`
+            body {
+                color: #353535;
+                font-family: 'Lato', sans-serif;
+            }
+
+            main {
+                margin: 50px auto;
+                width: 50vw;
+            }
+            .featured-image {
+                height: auto;
+                max-width: 300px;
+            }
+        `}</style>
+    </main>
 )
 
 export async function getServerSideProps({ res }) {
     const home = await client.getSingle('blog_home', {
-        fetchLinks: ['gated_content.uid', 'gated_content.title']
+        fetchLinks: ['gated_content.uid', 'gated_content.title', 'gated_content.featured_image']
     })
 
     const featuredPosts = await client.query(
@@ -142,28 +180,32 @@ export async function getServerSideProps({ res }) {
     posts.results.forEach((post) => {
         let uid = post.uid
         let title = post.data.title
+        let featuredImage = post.data.featured_image
         let type = 'blog_post'
         let postObj = {}
 
         postObj.type = type
         postObj.uid = uid
         postObj.title = title
+        postObj.featuredImage = featuredImage
         aggregatedPosts.push(postObj)
     })
 
-    // TODO: instead of looping through the datedContentPosts query get the relationship data from the home singleton content type
+    // ✔ TODO: instead of looping through the datedContentPosts query get the relationship data from the home singleton content type
 
     const promotedGatedContent = []
 
     home.data.promoted_gated_content.forEach((promotedGatedContentPost) => {
         let uid = promotedGatedContentPost.gated_content.uid
         let title = promotedGatedContentPost.gated_content.data.title
+        let featuredImage = promotedGatedContentPost.gated_content.data.featured_image
         let type = 'gated_content'
-
         let gatedObj = {}
+
         gatedObj.type = type
         gatedObj.uid = uid
         gatedObj.title = title
+        gatedObj.featuredImage = featuredImage
         promotedGatedContent.push(gatedObj)
     })
 
