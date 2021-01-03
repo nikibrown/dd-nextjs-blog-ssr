@@ -8,7 +8,7 @@ import PostListItem from '../components/PostListItem'
 // import GatedContentPost from '../components/GatedContentPost'
 
 const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
-    <main>
+    <main className="">
         <div className="container">
             {/* Tutorials: 
 		https://vercel.com/guides/deploying-next-and-prismic-with-vercel 
@@ -18,13 +18,7 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
         <pre>{JSON.stringify({ gatedContentPosts })}</pre>
         <img src={home.data.image.url} alt="avatar image" /> */}
             {/* <pre>{JSON.stringify({ home })}</pre> */}
-            <Image
-                src={home.data.image.url}
-                alt={home.data.image.alt}
-                width={home.data.image.dimensions.width}
-                height={home.data.image.dimensions.height}
-                className="blog-image"
-            />
+
             {/* NextJS Image component documentation:
 		https://nextjs.org/docs/basic-features/image-optimization 
 		
@@ -32,138 +26,134 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
 		
 		*/}
 
-            {/* <pre>{JSON.stringify({ home })}</pre> */}
+            {/* <pre>{JSON.stringify({ allBlogContent })}</pre> */}
 
-            <h1>{RichText.asText(home.data.headline)}</h1>
-            <p>{home.data.test_field}</p>
-            <p>{RichText.asText(home.data.description)}</p>
-            <h2>Featured Posts</h2>
-            <div className="row">
-                {featuredPosts.results.map((featuredPost, index) => (
-                    <div className="col-lg-4" key={featuredPost.uid}>
-                        <NextLink
-                            href={hrefResolver(featuredPost)}
-                            as={linkResolver(featuredPost)}
-                            passHref>
-                            <a className="card">
-                                <img
-                                    className="card-img-top"
-                                    src="http://placekitten.com/300/200"
-                                    alt="Card image cap"
-                                />
-                                <div className="card-body">
-                                    <h5 className="card-title">
-                                        {RichText.render(featuredPost.data.title)}
-                                    </h5>
-                                    <h6 classNAme="card-subtitle mb-2 text-muted">
-                                        {Date(featuredPost.data.date).toString()}
-                                    </h6>
-                                </div>
-                            </a>
-                        </NextLink>
-                    </div>
-                ))}
+            <div className="jumbotron bg-white text-center">
+                <Image
+                    src={home.data.image.url}
+                    alt={home.data.image.alt}
+                    width={home.data.image.dimensions.width}
+                    height={home.data.image.dimensions.height}
+                    className="blog-image"
+                />
+                <h1>{RichText.asText(home.data.headline)}</h1>
+                <p className="lead">{RichText.asText(home.data.description)}</p>
             </div>
-            <h2>Blog Posts</h2>
-
-            <ol>
-                {allBlogContent.map((post) => (
-                    <li key={post.uid}>
-                        <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
-                            <a>
-                                <Image
-                                    src={post.featuredImage.url}
-                                    alt={post.featuredImage.alt}
-                                    className="featured-image"
-                                    width={post.featuredImage.dimensions.width}
-                                    height={post.featuredImage.dimensions.height}
-                                />
-                            </a>
-                        </NextLink>
-                        <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
-                            <a>{RichText.render(post.title)}</a>
-                        </NextLink>
-                    </li>
-                ))}
-            </ol>
-
-            {/* TODO: delete this shit and use amys shit https://codepen.io/nikibrown/pen/LYRQPgX https://codesandbox.io/s/youthful-voice-4p2i8?file=/src/Posts.js:1629-1647 */}
-
-            {/* <ol>
-            {posts.results.map((post, index) =>
-                // after every three posts insert gated content
-                (index + 1) % 3 ? (
-                    <PostListItem
-                        key={post.uid}
-                        post={post}
-                        title={post.data.title}
-                        date={post.data.date}
-                    />
-                ) : (
-                    <>
-                        <PostListItem
-                            key={post.uid}
-                            post={post}
-                            title={post.data.title}
-                            date={post.data.date}
-                        />
-                        <p>Gated content will go here!</p>
-
-                       
-
-                        {index + 1 === 3 ? (
-                            <h3>
-                                Gated Content Post 1
-                                {home.data.promoted_gated_content[0].gated_content.slug}
-                            </h3>
-                        ) : null}
-
-                        {index + 1 === 6 ? (
-                            <h3>
-                                Gated Content Post 2
-                                {home.data.promoted_gated_content[1].gated_content.slug}
-                            </h3>
-                        ) : null}
-
-                        {index + 1 === 9 ? (
-                            <h3>
-                                Gated Content Post 3
-                                {home.data.promoted_gated_content[2].gated_content.slug}
-                            </h3>
-                        ) : null}
-                    </>
-                )
-            )}
-        </ol> */}
-
-            <link
-                rel="stylesheet"
-                href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-                integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-                crossOrigin="anonymous"></link>
-
-            <link
-                href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
-                rel="stylesheet"
-            />
-
-            <style global jsx>{`
-                body {
-                    color: #353535;
-                    font-family: 'Lato', sans-serif;
-                }
-
-                .featured-image {
-                    height: auto;
-                    max-width: 300px;
-                }
-
-                .blog-image {
-                    display: block;
-                    margin: 20px auto;
-                }
-            `}</style>
         </div>
+
+        <section className="featured-posts jumbotron">
+            <div className="container">
+                <h2 className="mb-4">Featured Posts</h2>
+                <div className="row">
+                    {featuredPosts.results.map((featuredPost, index) => (
+                        <div className="col-lg-4 col-sm-12">
+                            <div className="card h-100" key={featuredPost.uid}>
+                                <NextLink
+                                    href={hrefResolver(featuredPost)}
+                                    as={linkResolver(featuredPost)}
+                                    passHref>
+                                    <a>
+                                        <img
+                                            className="card-img-top"
+                                            src="http://placekitten.com/300/200"
+                                            alt="Card image cap"
+                                        />
+                                        <div className="card-body">
+                                            <h5 className="card-title">
+                                                {RichText.render(featuredPost.data.title)}
+                                            </h5>
+                                            <h6 className="card-subtitle mb-2 text-muted">
+                                                {Date(featuredPost.data.date).toString()}
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </NextLink>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <section className="blog-posts">
+            <div className="container">
+                <h2 className="mb-4">Blog Posts</h2>
+
+                <div className="row">
+                    {allBlogContent.map((post) => (
+                        <div
+                            className={`${
+                                post.gated ? 'col-lg-8 col-sm-12' : 'col-lg-4 col-sm-12'
+                            }  mb-4`}>
+                            <div className={`card h-100  ${post.type}`} key={post.uid}>
+                                <NextLink
+                                    href={hrefResolver(post)}
+                                    as={linkResolver(post)}
+                                    passHref>
+                                    <a>
+                                        <Image
+                                            src={post.featuredImage.url}
+                                            alt={post.featuredImage.alt}
+                                            className="card-img-top"
+                                            width={post.featuredImage.dimensions.width}
+                                            height={post.featuredImage.dimensions.height}
+                                        />
+                                        <div className="card-body">
+                                            <h5 className="card-title">
+                                                {RichText.render(post.title)}
+                                            </h5>
+                                        </div>
+                                    </a>
+                                </NextLink>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        {/* TODO: delete this shit and use amys shit https://codepen.io/nikibrown/pen/LYRQPgX https://codesandbox.io/s/youthful-voice-4p2i8?file=/src/Posts.js:1629-1647 */}
+
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossOrigin="anonymous"></link>
+
+        <link
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
+            rel="stylesheet"
+        />
+
+        <style global jsx>{`
+            body {
+                color: #353535;
+                font-family: 'Lato', sans-serif;
+            }
+
+            .featured-image {
+                height: auto;
+                max-width: 300px;
+            }
+
+            .blog-image {
+                display: block;
+                margin: 20px auto;
+            }
+
+            .card.gated_content {
+                background-color: var(--primary);
+                color: var(--light);
+            }
+
+            .card.gated_content a {
+                color: var(--light);
+            }
+
+            .height-0 {
+                height: 0;
+            }
+        `}</style>
     </main>
 )
 
@@ -204,12 +194,14 @@ export async function getServerSideProps({ res }) {
         let title = post.data.title
         let featuredImage = post.data.featured_image
         let type = 'blog_post'
+        let gated = false
         let postObj = {}
 
         postObj.type = type
         postObj.uid = uid
         postObj.title = title
         postObj.featuredImage = featuredImage
+        postObj.gated = gated
         aggregatedPosts.push(postObj)
     })
 
@@ -222,12 +214,14 @@ export async function getServerSideProps({ res }) {
         let title = promotedGatedContentPost.gated_content.data.title
         let featuredImage = promotedGatedContentPost.gated_content.data.featured_image
         let type = 'gated_content'
+        let gated = true
         let gatedObj = {}
 
         gatedObj.type = type
         gatedObj.uid = uid
         gatedObj.title = title
         gatedObj.featuredImage = featuredImage
+        gatedObj.gated = gated
         promotedGatedContent.push(gatedObj)
     })
 
@@ -257,7 +251,7 @@ export async function getServerSideProps({ res }) {
     // })
 
     aggregatedPosts.forEach((post, key) => {
-        if (key > 0 && key % 3 === 0) {
+        if (key > 0 && key % 4 === 0) {
             if (gatedContentCount < promotedGatedContent.length) {
                 const gatedPost = promotedGatedContent[gatedContentCount]
                 gatedContentCount++
