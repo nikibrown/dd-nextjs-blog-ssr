@@ -7,20 +7,17 @@ import Image from 'next/image'
 import PostListItem from '../components/PostListItem'
 // import GatedContentPost from '../components/GatedContentPost'
 
-const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
+const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
     <div>
         {/* Tutorials: 
 		https://vercel.com/guides/deploying-next-and-prismic-with-vercel 
 		https://dev.to/ruben_suet/set-up-nextjs-9-4-with-prismic-as-headless-cms-27ij
 		<pre>{JSON.stringify({home})}</pre>
-		<pre>{JSON.stringify({posts})}</pre> 
+		// <pre>{JSON.stringify({posts})}</pre> 
         <pre>{JSON.stringify({ gatedContentPosts })}</pre>
         <img src={home.data.image.url} alt="avatar image" /> */}
-
-        <pre>{JSON.stringify({ home })}</pre>
-
+        {/* <pre>{JSON.stringify({ home })}</pre> */}
         <Image src={home.data.image.url} alt="foo" width={600} height={460} />
-
         {/* NextJS Image component documentation:
 		https://nextjs.org/docs/basic-features/image-optimization 
 		
@@ -28,10 +25,11 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
 		
 		*/}
 
+        <pre>{JSON.stringify({ home })}</pre>
+
         <h1>{RichText.asText(home.data.headline)}</h1>
         <p>{home.data.test_field}</p>
         <p>{RichText.asText(home.data.description)}</p>
-
         <h2>Featured Posts</h2>
         <ul>
             {featuredPosts.results.map((featuredPost, index) => (
@@ -47,7 +45,20 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
             ))}
         </ul>
         <h2>Blog Posts</h2>
-        <ul>
+
+        <ol>
+            {allBlogContent.map((post) => (
+                <li key={post.uid}>
+                    <NextLink href={hrefResolver(post)} as={linkResolver(post)} passHref>
+                        <a>{RichText.render(post.title)}</a>
+                    </NextLink>
+                </li>
+            ))}
+        </ol>
+
+        {/* TODO: delete this shit and use amys shit https://codepen.io/nikibrown/pen/LYRQPgX https://codesandbox.io/s/youthful-voice-4p2i8?file=/src/Posts.js:1629-1647 */}
+
+        {/* <ol>
             {posts.results.map((post, index) =>
                 // after every three posts insert gated content
                 (index + 1) % 3 ? (
@@ -67,9 +78,7 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
                         />
                         <p>Gated content will go here!</p>
 
-                        {/* TODO: fetch links to grab this content */}
-
-                        {/* TODO: turn this into a component */}
+                       
 
                         {index + 1 === 3 ? (
                             <h3>
@@ -91,25 +100,17 @@ const BlogHome = ({ home, posts, featuredPosts, gatedContentPosts }) => (
                                 {home.data.promoted_gated_content[2].gated_content.slug}
                             </h3>
                         ) : null}
-
-                        {/* {gatedContent.results.map((gatedContentPost, index) => {
-					{index}
-					<GatedContentPost 
-						key={gatedContentPost.uid}
-						gatedContentPost={gatedContentPost}
-						title={gatedContentPost.data.title}
-						date={gatedContentPost.data.date}
-					/>
-				})} */}
                     </>
                 )
             )}
-        </ul>
+        </ol> */}
     </div>
 )
 
 export async function getServerSideProps({ res }) {
-    const home = await client.getSingle('blog_home')
+    const home = await client.getSingle('blog_home', {
+        fetchLinks: ['gated_content.uid', 'gated_content.title']
+    })
 
     const featuredPosts = await client.query(
         [
@@ -127,9 +128,80 @@ export async function getServerSideProps({ res }) {
         { orderings: '[my.post.date desc]' }
     )
 
-    const gatedContentPosts = await client.query(
-        Prismic.Predicates.at('document.type', 'gated_content')
-    )
+    // const gatedContentPosts = await client.query(
+    //     Prismic.Predicates.at('document.type', 'gated_content'),
+    //     { orderings: '[my.post.date desc]' }
+    // )
+
+    // cleaning up and combining blog post and gated content data
+
+    let allBlogContent = []
+    let aggregatedPosts = []
+    let aggregatedGatedContent = []
+
+    posts.results.forEach((post) => {
+        let uid = post.uid
+        let title = post.data.title
+        let type = 'blog_post'
+        let postObj = {}
+
+        postObj.type = type
+        postObj.uid = uid
+        postObj.title = title
+        aggregatedPosts.push(postObj)
+    })
+
+    // TODO: instead of looping through the datedContentPosts query get the relationship data from the home singleton content type
+
+    const promotedGatedContent = []
+
+    home.data.promoted_gated_content.forEach((promotedGatedContentPost) => {
+        let uid = promotedGatedContentPost.gated_content.uid
+        let title = promotedGatedContentPost.gated_content.data.title
+        let type = 'gated_content'
+
+        let gatedObj = {}
+        gatedObj.type = type
+        gatedObj.uid = uid
+        gatedObj.title = title
+        promotedGatedContent.push(gatedObj)
+    })
+
+    // gatedContentPosts.results.forEach((gatedContentPost) => {
+    //     let uid = gatedContentPost.uid
+    //     let title = gatedContentPost.data.title
+    //     let type = 'gated_content'
+
+    //     let gatedObj = {}
+    //     gatedObj.type = type
+    //     gatedObj.uid = uid
+    //     gatedObj.title = title
+    //     aggregatedGatedContent.push(gatedObj)
+    // })
+
+    let gatedContentCount = 0
+
+    // aggregatedPosts.forEach((post, key) => {
+    //     if (key > 0 && key % 3 === 0) {
+    //         if (gatedContentCount < aggregatedGatedContent.length) {
+    //             const gatedPost = aggregatedGatedContent[gatedContentCount]
+    //             gatedContentCount++
+    //             allBlogContent.push(gatedPost)
+    //         }
+    //     }
+    //     allBlogContent.push(post)
+    // })
+
+    aggregatedPosts.forEach((post, key) => {
+        if (key > 0 && key % 3 === 0) {
+            if (gatedContentCount < promotedGatedContent.length) {
+                const gatedPost = promotedGatedContent[gatedContentCount]
+                gatedContentCount++
+                allBlogContent.push(gatedPost)
+            }
+        }
+        allBlogContent.push(post)
+    })
 
     // TODO: nav example https://prismic.io/docs/technologies/navbars-footers-and-menus-nextjs
 
@@ -139,7 +211,7 @@ export async function getServerSideProps({ res }) {
 
     res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate')
 
-    return { props: { home, featuredPosts, posts, gatedContentPosts } }
+    return { props: { home, featuredPosts, posts, allBlogContent } }
 }
 
 export default BlogHome

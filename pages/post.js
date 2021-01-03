@@ -9,7 +9,7 @@ const Post = ({ post }) => (
             <a>Back to blog list</a>
         </NextLink>
 
-        {/* <pre>{JSON.stringify({ post })}</pre> */}
+        <pre>{JSON.stringify({ post })}</pre>
 
         {RichText.render(post.data.title)}
         <p>{Date(post.data.date).toString()}</p>
