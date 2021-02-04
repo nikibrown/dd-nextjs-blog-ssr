@@ -13,7 +13,7 @@ export const accessToken = ''
 // Manages links to internal Prismic documents
 // Modify as your project grows to handle any new routes you've made
 export const linkResolver = (doc) => {
-    if (doc.type === 'post') {
+    if (doc.type === 'blog_post') {
         return `/blog/${doc.uid}`
     } else if (doc.type === 'gated_content') {
         return `/gated-content/${doc.uid}`
@@ -24,7 +24,7 @@ export const linkResolver = (doc) => {
 
 // Additional helper function for Next/Link components
 export const hrefResolver = (doc) => {
-    if (doc.type === 'post') {
+    if (doc.type === 'blog_post') {
         return `/post?uid=${doc.uid}`
     } else if (doc.type === 'gated_content') {
         // /gated-content here refers to ./pages/gated-content.js and this passes the uid to the template. I think this also makes the association between content type and template for rendering.
@@ -32,6 +32,10 @@ export const hrefResolver = (doc) => {
     }
     return '/'
 }
+
+// Wondering if I need to have post.js and gated-content.js inside /pages/blog/post.js & pages/gated-content/gated-content.js
+
+// Also wondering how this is all working without using next.js router?
 
 // TODO: combine these helper functions - find a way to check if a post has related content
 // <Link> nextjs component docs https://nextjs.org/docs/api-reference/next/link

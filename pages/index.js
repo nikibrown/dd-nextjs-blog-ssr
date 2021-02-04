@@ -4,11 +4,11 @@ import { RichText, Date } from 'prismic-reactjs'
 import { client, linkResolver, hrefResolver } from '../prismic-configuration'
 import { default as NextLink } from 'next/link'
 import Image from 'next/image'
-import PostListItem from '../components/PostListItem'
+// import PostListItem from '../components/PostListItem'
 // import GatedContentPost from '../components/GatedContentPost'
 
-const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
-    <main className="">
+const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
+    <main>
         <div className="container">
             {/* Tutorials: 
 		https://vercel.com/guides/deploying-next-and-prismic-with-vercel 
@@ -18,23 +18,25 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
         <pre>{JSON.stringify({ gatedContentPosts })}</pre>
         <img src={home.data.image.url} alt="avatar image" /> */}
             {/* <pre>{JSON.stringify({ home })}</pre> */}
-
             {/* NextJS Image component documentation:
 		https://nextjs.org/docs/basic-features/image-optimization 
 		
 		Prismic/Imgix docs https://user-guides.prismic.io/en/articles/3309829-image-optimization-imgix-integration
 		
 		*/}
+            {/* <p>{JSON.stringify({ allBlogContent })}</p> */}
 
-            {/* <pre>{JSON.stringify({ allBlogContent })}</pre> */}
-
+            {/* <h1>featuredPosts (data from prismic)</h1>
+            <p>{JSON.stringify({ featuredPosts })}</p>
+            <h1>allFeaturedPosts (simplified data)</h1>
+            <p>{JSON.stringify({ allFeaturedPosts })}</p> */}
             <div className="jumbotron bg-white text-center">
                 <Image
                     src={home.data.image.url}
                     alt={home.data.image.alt}
                     width={home.data.image.dimensions.width}
                     height={home.data.image.dimensions.height}
-                    className="blog-image"
+                    className="blog-image "
                 />
                 <h1>{RichText.asText(home.data.headline)}</h1>
                 <p className="lead">{RichText.asText(home.data.description)}</p>
@@ -45,26 +47,27 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
             <div className="container">
                 <h2 className="mb-4">Featured Posts</h2>
                 <div className="row">
-                    {featuredPosts.results.map((featuredPost, index) => (
+                    {allFeaturedPosts.map((featuredPost, index) => (
                         <div className="col-lg-4 col-sm-12">
                             <div className="card h-100" key={featuredPost.uid}>
                                 <NextLink
                                     href={hrefResolver(featuredPost)}
+                                    // Optional decorator for the path that will be shown in the browser URL bar
                                     as={linkResolver(featuredPost)}
-                                    passHref>
+                                    passHref
+                                    shallow={true}>
                                     <a>
-                                        <img
+                                        <Image
+                                            src={featuredPost.featuredImage.url}
+                                            alt={featuredPost.featuredImage.alt}
                                             className="card-img-top"
-                                            src="http://placekitten.com/300/200"
-                                            alt="Card image cap"
+                                            width={featuredPost.featuredImage.dimensions.width}
+                                            height={featuredPost.featuredImage.dimensions.height}
                                         />
                                         <div className="card-body">
                                             <h5 className="card-title">
-                                                {RichText.render(featuredPost.data.title)}
+                                                {RichText.render(featuredPost.title)}
                                             </h5>
-                                            <h6 className="card-subtitle mb-2 text-muted">
-                                                {Date(featuredPost.data.date).toString()}
-                                            </h6>
                                         </div>
                                     </a>
                                 </NextLink>
@@ -89,6 +92,7 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
                                 <NextLink
                                     href={hrefResolver(post)}
                                     as={linkResolver(post)}
+                                    shallow={true}
                                     passHref>
                                     <a>
                                         <Image
@@ -113,6 +117,10 @@ const BlogHome = ({ home, posts, featuredPosts, allBlogContent }) => (
         </section>
 
         {/* TODO: delete this shit and use amys shit https://codepen.io/nikibrown/pen/LYRQPgX https://codesandbox.io/s/youthful-voice-4p2i8?file=/src/Posts.js:1629-1647 */}
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></link>
 
         <link
             rel="stylesheet"
@@ -178,20 +186,35 @@ export async function getServerSideProps({ res }) {
         { orderings: '[my.post.date desc]' }
     )
 
-    // const gatedContentPosts = await client.query(
-    //     Prismic.Predicates.at('document.type', 'gated_content'),
-    //     { orderings: '[my.post.date desc]' }
-    // )
-
     // cleaning up and combining blog post and gated content data
 
     let allBlogContent = []
     let aggregatedPosts = []
+    let allFeaturedPosts = []
     let aggregatedGatedContent = []
 
     posts.results.forEach((post) => {
         let uid = post.uid
         let title = post.data.title
+        let body = post.data.body
+        let featuredImage = post.data.featured_image
+        let type = 'blog_post'
+        let gated = false
+        let postObj = {}
+
+        postObj.type = type
+        postObj.uid = uid
+        postObj.body = body
+        postObj.title = title
+        postObj.featuredImage = featuredImage
+        postObj.gated = gated
+        aggregatedPosts.push(postObj)
+    })
+
+    featuredPosts.results.forEach((post) => {
+        let uid = post.uid
+        let title = post.data.title
+        let body = post.data.body
         let featuredImage = post.data.featured_image
         let type = 'blog_post'
         let gated = false
@@ -200,9 +223,10 @@ export async function getServerSideProps({ res }) {
         postObj.type = type
         postObj.uid = uid
         postObj.title = title
+        postObj.body = body
         postObj.featuredImage = featuredImage
         postObj.gated = gated
-        aggregatedPosts.push(postObj)
+        allFeaturedPosts.push(postObj)
     })
 
     // ✔ TODO: instead of looping through the datedContentPosts query get the relationship data from the home singleton content type
@@ -225,30 +249,7 @@ export async function getServerSideProps({ res }) {
         promotedGatedContent.push(gatedObj)
     })
 
-    // gatedContentPosts.results.forEach((gatedContentPost) => {
-    //     let uid = gatedContentPost.uid
-    //     let title = gatedContentPost.data.title
-    //     let type = 'gated_content'
-
-    //     let gatedObj = {}
-    //     gatedObj.type = type
-    //     gatedObj.uid = uid
-    //     gatedObj.title = title
-    //     aggregatedGatedContent.push(gatedObj)
-    // })
-
     let gatedContentCount = 0
-
-    // aggregatedPosts.forEach((post, key) => {
-    //     if (key > 0 && key % 3 === 0) {
-    //         if (gatedContentCount < aggregatedGatedContent.length) {
-    //             const gatedPost = aggregatedGatedContent[gatedContentCount]
-    //             gatedContentCount++
-    //             allBlogContent.push(gatedPost)
-    //         }
-    //     }
-    //     allBlogContent.push(post)
-    // })
 
     aggregatedPosts.forEach((post, key) => {
         if (key > 0 && key % 4 === 0) {
@@ -269,7 +270,7 @@ export async function getServerSideProps({ res }) {
 
     res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate')
 
-    return { props: { home, featuredPosts, posts, allBlogContent } }
+    return { props: { home, allFeaturedPosts, allBlogContent } }
 }
 
 export default BlogHome

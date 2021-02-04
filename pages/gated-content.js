@@ -8,10 +8,11 @@ const GatedContent = ({ gatedContent }) => (
         <NextLink href="/">
             <a>Back to blog list</a>
         </NextLink>
-        {/* <pre>{JSON.stringify({ gatedContent })}</pre> */}
+        <pre>{JSON.stringify({ gatedContent })}</pre>
 
         {RichText.render(gatedContent.data.title)}
         {RichText.render(gatedContent.data.content)}
+        {gatedContent.data.test}
     </div>
 )
 

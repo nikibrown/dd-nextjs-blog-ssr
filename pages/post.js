@@ -1,6 +1,8 @@
 import React from 'react'
 import { default as NextLink } from 'next/link'
 import { RichText, Date } from 'prismic-reactjs'
+import SliceZone from '../components/SliceZone'
+import RelatedContent from '../components/RelatedContent'
 import { client, relatedLinkResolver, relatedHrefResolver } from '../prismic-configuration'
 
 const Post = ({ post }) => (
@@ -20,41 +22,16 @@ const Post = ({ post }) => (
                 width="500px"
             />
 
-            {/* {RichText.render(post.data.body)} */}
+            <SliceZone sliceZone={post.data.body} />
 
             {/* TODO: logic for slices https://prismic.io/docs/technologies/rendering-slices-reactjs */}
 
             {/* ✔ TODO: Repeating (maybe a slice) for content relationship https://prismic.io/docs/technologies/rendering-a-link-or-content-relationship-field-reactjs */}
 
-            <h2>You should also read this blog posts:</h2>
+            {/* https://stackoverflow.com/questions/54815348/nextjs-page-goes-to-404-on-refresh
+			https://nextjs.org/learn/basics/dynamic-routes */}
 
-            <ul>
-                {/* TODO: figure out why refreshing the page results in a 404. 
-			
-			https://stackoverflow.com/questions/54815348/nextjs-page-goes-to-404-on-refresh
-			https://nextjs.org/learn/basics/dynamic-routes
-			*/}
-
-                {post.data.related_content.map((relatedPost, index) => (
-                    <li key={index}>
-                        <NextLink
-                            // TODO: find a way to use/understand the regular linkResolver & hrefResolver for relatedPosts in ./prismic-configuration.js
-                            href={relatedHrefResolver(relatedPost)}
-                            as={relatedLinkResolver(relatedPost)}
-                            passHref>
-                            <a>
-                                {RichText.render(relatedPost.blog_post.data.title)}
-                                <img
-                                    src={relatedPost.blog_post.data.featured_image.url}
-                                    alt={relatedPost.blog_post.data.title}
-                                    width={600}
-                                    height={460}
-                                />
-                            </a>
-                        </NextLink>
-                    </li>
-                ))}
-            </ul>
+            <RelatedContent relatedContent={post.data.related_content} />
 
             <link
                 rel="stylesheet"
