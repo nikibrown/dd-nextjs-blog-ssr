@@ -4,7 +4,6 @@ import { RichText, Date } from 'prismic-reactjs'
 import { client, linkResolver, hrefResolver } from '../prismic-configuration'
 import { default as NextLink } from 'next/link'
 import Image from 'next/image'
-// import '../styles/blog.scss'
 
 const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
     <main>

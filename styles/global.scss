@@ -2,9 +2,12 @@
 @import url(https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css);
 @import url(https://fonts.googleapis.com/css?family=Lato:300,400,700,900);
 
-body {
+.blog {
     color: red;
     font-family: 'Lato', sans-serif;
+    .container {
+        background-color: yellow !important;
+    }
 }
 
 .featured-image {
@@ -28,4 +31,21 @@ body {
 
 .height-0 {
     height: 0;
+}
+
+h1.h1,
+h2.h2,
+h3.h3,
+h4.h4 {
+    font-family: 'Lato', sans-serif !important;
+    font-weight: 900;
+}
+
+.featured-image {
+    height: auto;
+    max-width: 300px;
+}
+
+article.article {
+    padding: 100px 0;
 }
