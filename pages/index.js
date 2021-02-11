@@ -4,8 +4,7 @@ import { RichText, Date } from 'prismic-reactjs'
 import { client, linkResolver, hrefResolver } from '../prismic-configuration'
 import { default as NextLink } from 'next/link'
 import Image from 'next/image'
-// import PostListItem from '../components/PostListItem'
-// import GatedContentPost from '../components/GatedContentPost'
+// import '../styles/blog.scss'
 
 const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
     <main>
@@ -101,51 +100,6 @@ const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
                 </div>
             </div>
         </section>
-
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></link>
-
-        <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-            crossOrigin="anonymous"></link>
-
-        <link
-            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900"
-            rel="stylesheet"
-        />
-
-        <style global jsx>{`
-            body {
-                color: #353535;
-                font-family: 'Lato', sans-serif;
-            }
-
-            .featured-image {
-                height: auto;
-                max-width: 300px;
-            }
-
-            .blog-image {
-                display: block;
-                margin: 20px auto;
-            }
-
-            .card.gated_content {
-                background-color: var(--primary);
-                color: var(--light);
-            }
-
-            .card.gated_content a {
-                color: var(--light);
-            }
-
-            .height-0 {
-                height: 0;
-            }
-        `}</style>
     </main>
 )
 

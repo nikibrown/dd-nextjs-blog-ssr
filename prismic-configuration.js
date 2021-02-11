@@ -53,3 +53,12 @@ export const relatedHrefResolver = (relatedPost) => {
 // -- Client method to query Prismic
 // Connects to the given repository to facilitate data queries
 export const client = Prismic.client(apiEndpoint, { accessToken })
+
+// SCSS
+// const path = require('path')
+
+// module.exports = {
+//     sassOptions: {
+//         includePaths: [path.join(__dirname, 'styles')]
+//     }
+// }
