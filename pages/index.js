@@ -5,6 +5,7 @@ import { client, linkResolver, hrefResolver } from '../prismic-configuration'
 import { default as NextLink } from 'next/link'
 import Image from 'next/image'
 import FeaturedPost from '../components/FeaturedPost'
+import BlogPost from '../components/BlogPost'
 
 const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
     <main>
@@ -51,28 +52,7 @@ const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
                                 post.gated ? 'col-lg-8 col-sm-12' : 'col-lg-4 col-sm-12'
                             }  mb-4`}
                             key={index}>
-                            <div className={`card h-100  ${post.type}`} key={post.uid}>
-                                <NextLink
-                                    href={hrefResolver(post)}
-                                    as={linkResolver(post)}
-                                    shallow={true}
-                                    passHref>
-                                    <a>
-                                        <Image
-                                            src={post.featuredImage.url}
-                                            alt={post.featuredImage.alt}
-                                            className="card-img-top"
-                                            width={post.featuredImage.dimensions.width}
-                                            height={post.featuredImage.dimensions.height}
-                                        />
-                                        <div className="card-body">
-                                            <h1 className="card-title">
-                                                {RichText.asText(post.title)}
-                                            </h1>
-                                        </div>
-                                    </a>
-                                </NextLink>
-                            </div>
+                            <BlogPost postData={post} />
                         </div>
                     ))}
                 </div>
@@ -146,8 +126,6 @@ export async function getServerSideProps({ res }) {
         postObj.gated = gated
         allFeaturedPosts.push(postObj)
     })
-
-    // ✔ TODO: instead of looping through the datedContentPosts query get the relationship data from the home singleton content type
 
     // make obj for gatedContent
     home.data.promoted_gated_content.forEach((promotedGatedContentPost) => {
