@@ -9,6 +9,10 @@ export const apiEndpoint = 'https://dd-sample-next-js-blog.cdn.prismic.io/api/v2
 // Generate a token in your dashboard and configure it here if your repository is private
 export const accessToken = ''
 
+// Routing in nextjs https://prismic.io/blog/seo-with-react-and-nextjs
+
+// i18n example https://user-guides.prismic.io/en/articles/2933718-multi-language-website-with-prismic-and-next-js-10
+
 // -- Link resolution rules
 // Manages links to internal Prismic documents
 // Modify as your project grows to handle any new routes you've made
