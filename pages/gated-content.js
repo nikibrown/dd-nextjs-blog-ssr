@@ -1,7 +1,8 @@
 import React from 'react'
 import { default as NextLink } from 'next/link'
-import { RichText, Date } from 'prismic-reactjs'
+import { RichText } from 'prismic-reactjs'
 import { client, relatedLinkResolver, relatedHrefResolver } from '../prismic-configuration'
+import RelatedContent from '../components/RelatedContent'
 
 const GatedContent = ({ gatedContent }) => (
     <main>
