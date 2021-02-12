@@ -4,9 +4,6 @@ import { default as NextLink } from 'next/link'
 import { relatedLinkResolver, relatedHrefResolver } from '../prismic-configuration'
 import Image from 'next/image'
 
-/**
- * Post slice zone component
- */
 const RelatedContent = ({ relatedContent }) => {
     // check to see if related content exists && related content is actually selected - check first item in array and see if a post id is there
     if (relatedContent.length !== 0 && relatedContent[0].blog_post.id !== undefined) {
