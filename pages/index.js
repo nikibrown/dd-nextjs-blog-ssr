@@ -23,7 +23,7 @@ const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
                     height={home.data.image.dimensions.height}
                     className="blog-image "
                 />
-                <h1>{RichText.asText(home.data.headline)}</h1>
+                <h1>{RichText.asText(home.data.headline)}!!!!!</h1>
                 <p className="lead">{RichText.asText(home.data.description)}</p>
             </div>
         </div>
