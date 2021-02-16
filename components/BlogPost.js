@@ -1,14 +1,14 @@
 import React from 'react'
 import { RichText } from 'prismic-reactjs'
 import { default as NextLink } from 'next/link'
-import { linkResolver, hrefResolver } from '../prismic-configuration'
+import { linkResolver } from '../prismic-configuration'
 import Image from 'next/image'
 
 const BlogPost = ({ postData }) => {
     return (
         <div className={`card h-100  ${postData.type}`} key={postData.uid}>
             <NextLink
-                href={hrefResolver(postData)}
+                href={linkResolver(postData)}
                 as={linkResolver(postData)}
                 passHref
                 shallow={true}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { RichText } from 'prismic-reactjs'
 import { default as NextLink } from 'next/link'
-import { relatedLinkResolver, relatedHrefResolver } from '../prismic-configuration'
+import { relatedLinkResolver } from '../prismic-configuration'
 import Image from 'next/image'
 
 const RelatedContent = ({ relatedContent }) => {
@@ -15,7 +15,7 @@ const RelatedContent = ({ relatedContent }) => {
                         <div className="col-lg-4 col-sm-12" key={index}>
                             <div className="card h-100">
                                 <NextLink
-                                    href={relatedHrefResolver(relatedPost)}
+                                    href={relatedLinkResolver(relatedPost)}
                                     as={relatedLinkResolver(relatedPost)}
                                     passHref>
                                     <a>
