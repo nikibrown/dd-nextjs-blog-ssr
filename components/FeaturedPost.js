@@ -18,7 +18,8 @@ const FeaturedPost = ({ featuredPost }) => {
                         src={featuredPost.featuredImage.url}
                         alt={featuredPost.featuredImage.alt}
                         className="card-img-top"
-                        layout="responsive"
+                        layout="intrinsic"
+                        preload="true"
                         width={featuredPost.featuredImage.dimensions.width}
                         height={featuredPost.featuredImage.dimensions.height}
                     />
