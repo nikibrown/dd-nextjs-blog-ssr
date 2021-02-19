@@ -17,6 +17,7 @@ const BlogPost = ({ postData }) => {
                         src={postData.featuredImage.url}
                         alt={postData.featuredImage.alt}
                         className="card-img-top"
+                        layout="responsive"
                         width={postData.featuredImage.dimensions.width}
                         height={postData.featuredImage.dimensions.height}
                     />

@@ -18,6 +18,7 @@ const FeaturedPost = ({ featuredPost }) => {
                         src={featuredPost.featuredImage.url}
                         alt={featuredPost.featuredImage.alt}
                         className="card-img-top"
+                        layout="responsive"
                         width={featuredPost.featuredImage.dimensions.width}
                         height={featuredPost.featuredImage.dimensions.height}
                     />

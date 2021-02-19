@@ -1,14 +1,82 @@
 import React from 'react'
 import Prismic from 'prismic-javascript'
 import { RichText, Date } from 'prismic-reactjs'
-import { client, linkResolver, hrefResolver } from '../prismic-configuration'
-import { default as NextLink } from 'next/link'
+import { client } from '../prismic-configuration'
 import Image from 'next/image'
 import FeaturedPost from '../components/FeaturedPost'
 import BlogPost from '../components/BlogPost'
 
 const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
     <main>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div className="container">
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    {/* <ul className="navbar-nav mr-auto">
+                        <li className="nav-item active">
+                            <a className="nav-link" href="#">
+                                Home <span className="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="#">
+                                Link
+                            </a>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a
+                                className="nav-link dropdown-toggle"
+                                href="#"
+                                id="navbarDropdown"
+                                role="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a className="dropdown-item" href="#">
+                                    Action
+                                </a>
+                                <a className="dropdown-item" href="#">
+                                    Another action
+                                </a>
+                                <div className="dropdown-divider"></div>
+                                <a className="dropdown-item" href="#">
+                                    Something else here
+                                </a>
+                            </div>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link disabled" href="#">
+                                Disabled
+                            </a>
+                        </li>
+                    </ul> */}
+                    <form className="form-inline my-2 my-lg-0">
+                        <input
+                            className="form-control mr-sm-2"
+                            type="search"
+                            placeholder="Search"
+                            aria-label="Search"
+                        />
+                        <button className="btn btn-primary my-2 my-sm-0" type="submit">
+                            Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
         <div className="container">
             {/* IGNORE FOR TROUBLESHOOTING! <p>{JSON.stringify({ allBlogContent })}</p> 
 			<h1>featuredPosts (data from prismic)</h1>
@@ -62,6 +130,14 @@ const BlogHome = ({ home, allFeaturedPosts, allBlogContent }) => (
 )
 
 export async function getServerSideProps({ res }) {
+    // query based on value of text input after clicking search
+    // display query results on a search results page?
+    // https://www.algolia.com/doc/guides/building-search-ui/getting-started/react/
+
+    // const searchResults = await client.query([Prismic.Predicates.fulltext('document', 'cats')], {
+    //     orderings: '[my.post.date desc]'
+    // })
+
     // Get homepage content (including gated posts), featured post content and post content
     const home = await client.getSingle('blog_home', {
         fetchLinks: ['gated_content.uid', 'gated_content.title', 'gated_content.featured_image']
